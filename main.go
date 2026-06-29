@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"net"
+	"os"
 )
 
 
@@ -14,33 +14,25 @@ type TCPAddr struct {
 
 
 func main() {
-    fmt.Print("hello")
+    fmt.Println("Starting TCP server on 8080")
+    l, err := net.Listen("tcp", "127.0.0.1:8080")
+    if err != nil {
+        fmt.Print("couldnt make listener")
+        os.Exit(1)
+    }
 
     for {
-        ln, err := net.Listen("tcp", "127.0.0.1:8080")
+        conn, err := l.Accept()
         if err != nil {
-            fmt.Print("couldnt make listener")
-            return 
-        }
-        // fmt.Printf(ln.Accept())
-        // ln.Close()
-        tcpAddr := TCPAddr{
-            Ip: bytes{"127.0.0.1"},
-        }
+            fmt.Println("Error accepting connection:", err)
+			continue
 
-
+        }
+        fmt.Println("Connected to tcp server running on 8080")
+        fmt.Fprint(conn)
         
-        conn, err := net.DialTCP("tcp", nil, nil)
-        if err != nil {
-            fmt.Print("could get connaection")
-            
-        }
-        fmt.Print(conn)
-        ln.Accept()
     
     }
-    
-    
-    
+     
 
 }
